@@ -1,0 +1,9 @@
+im
+
+
+
+if __name__ == "__main__":
+    suite = unittest.TestSuite()
+    suite.addTest(TestCreateSiameseTFDatasetAutoAugment('test_tf_dataset_creation'))
+    runner = unittest.TextTestRunner()
+    runner.run(suite)
