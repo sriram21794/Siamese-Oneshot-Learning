@@ -5,24 +5,17 @@ import glob
 import os
 import numpy as np
 import random
+from config import config
 
-random.seed(22)
-
-
-
-TARGET_SIZE = (150, 150, 1)
-BATCH_SIZE = 64
-WHITE_LIST_FORMATS = ('png', 'jpg', 'jpeg', 'bmp', 'ppm', 'tif', 'tiff')
-NB_EPOCHS = 10
-
+random.seed(config.seed)
 
 def process_images(images):
     
     inputs = []
     
     for image in images:
-        img = tf.keras.preprocessing.image.load_img(image, target_size=TARGET_SIZE[:2], 
-                                                    color_mode="rgb" if TARGET_SIZE[2] == 3 else 'grayscale')
+        img = tf.keras.preprocessing.image.load_img(image, target_size=config.target_size[:2], 
+                                                    color_mode="rgb" if config.target_size[2] == 3 else 'grayscale')
         img_array = tf.keras.preprocessing.image.img_to_array(img)
         # TODO: Add aug
         img_array = img_array/ 255.
@@ -59,18 +52,18 @@ def pairwise_generator(categoriores, category_to_images, batch_size):
                                 for image_pair_1, image_pair_2 in batch_image_pairs])
 
             yield { "input_1": input_1, "input_2": input_2}, target
+            batch_image_pairs = []
 
 
-def get_tf_dataset(directory_, use_augmentation=False, batch_size=BATCH_SIZE, nb_epochs=NB_EPOCHS):
+def get_tf_dataset(directory_, use_augmentation=False, batch_size=config.batch_size, nb_epochs=config.nb_epochs):
 
     datagenerator = tf.keras.preprocessing.image.ImageDataGenerator()
 
     alphabets = sorted(os.listdir(directory_))
-    alphabets = alphabets[:2]
     
     alphabet_to_images = {}
     for alphabet_id, alphabet  in enumerate(alphabets):
-        alphabet_to_images[alphabet] = list(filter( lambda _: _.rsplit(".", 1)[-1] in WHITE_LIST_FORMATS ,
+        alphabet_to_images[alphabet] = list(filter( lambda _: _.rsplit(".", 1)[-1] in config.white_list_formats ,
                                                     glob.glob(f"{os.path.join(directory_, alphabet)}/**/*", recursive=True)))
 
 
@@ -80,8 +73,8 @@ def get_tf_dataset(directory_, use_augmentation=False, batch_size=BATCH_SIZE, nb
 
     output_types = {"input_1": tf.float32, "input_2": tf.float32}, tf.float32
     
-    output_shapes=({"input_1": tf.TensorShape((None, *TARGET_SIZE)), 
-                    "input_2": tf.TensorShape((None, *TARGET_SIZE))}, 
+    output_shapes=({"input_1": tf.TensorShape((None, *config.target_size)), 
+                    "input_2": tf.TensorShape((None, *config.target_size))}, 
                     tf.TensorShape((None,)))
     
     def dummy_generator(): # To avoid converting strings and lists to tensor
