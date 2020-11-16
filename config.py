@@ -1,10 +1,7 @@
-
 import json
 from typing import Tuple, List
 
 
-
- 
 class Config:
     def __init__(self, config_json=None):
         self._config = {
@@ -14,12 +11,11 @@ class Config:
             "nb_epochs": 10,
             "seed": 22,
             "log_dir": "./logs",
-            "background_samples": 1000, 
+            "background_samples": 1000,
             "evaluation_samples": 500
         }
         if config_json is not None:
             self.load_json(config_json)
-
 
     def get_property(self, property_name):
         if property_name not in self._config.keys():
@@ -30,7 +26,6 @@ class Config:
     def set_property(self, property_name, value):
         self._config[property_name] = value
 
-    
     def load_json(self, json_file):
         with open(json_file) as fp:
             config_dict = json.load(fp)
@@ -68,10 +63,5 @@ class Config:
     def evaluation_samples(self) -> int:
         return int(self.get_property('evaluation_samples'))
 
+
 config = Config()
-
-
-
-
-
-

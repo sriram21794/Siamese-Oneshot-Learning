@@ -1,4 +1,22 @@
 {
-    "background_samples": 19280,
-    "evaluation_samples": 13180
+  "target_size": [
+    150,
+    150,
+    1
+  ],
+  "batch_size": 64,
+  "white_list_formats": [
+    "png",
+    "jpg",
+    "jpeg",
+    "bmp",
+    "ppm",
+    "tif",
+    "tiff"
+  ],
+  "nb_epochs": 10,
+  "seed": 22,
+  "log_dir": "./logs",
+  "background_samples": 19280,
+  "evaluation_samples": 13180
 }
